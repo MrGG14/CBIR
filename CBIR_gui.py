@@ -158,8 +158,8 @@ def calcular_imagenes():
         lbl_output_image.image = img
 
     # Label IMAGEN DE SALIDA
-    lblInfo3 = Label(root, text="IMAGENES DE SALIDA:", font="bold")
-    lblInfo3.grid(column=1, row=0, padx=5, pady=5, columnspan=6)
+    lbl_info3 = Label(root, text="IMAGENES DE SALIDA:", font="bold")
+    lbl_info3.grid(column=1, row=0, padx=5, pady=5, columnspan=6)
     pass
 
 
@@ -172,10 +172,9 @@ def elegir_imagen():
     if len(path_image) > 0:
         # Leer la imagen de entrada y la redimensionamos
         global query_image
-        query_image = cv2.imread(path_image)
-        query_image = imutils.resize(query_image, width=300)
-        query_image = cv2.cvtColor(query_image, cv2.COLOR_BGR2RGB)
-        im = Image.fromarray(query_image)
+        query_image = cv2.cvtColor(cv2.imread(path_image), cv2.COLOR_BGR2RGB)
+        im = imutils.resize(query_image, width=300)
+        im = Image.fromarray(im)
         img = ImageTk.PhotoImage(image=im)
         lbl_input_image.configure(image=img)
         lbl_input_image.image = img
