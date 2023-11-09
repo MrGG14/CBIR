@@ -124,45 +124,6 @@ def color_histogram():
     return res_images_path
 
 
-def harris():
-    res_images_path = []
-
-    corners = np.load('./npy_mat/HARRIS_descriptors.npy')
-    descriptors_train = corners[:, 2:]  # Quitamos los dos primeros pertenecientes a indices de la imagen
-
-    n_neighbors = 1000
-    knn = NearestNeighbors(n_neighbors=n_neighbors, algorithm='auto', metric='euclidean')
-    knn.fit(descriptors_train)
-
-    new_img = query_image
-    gray_im_new = cv2.cvtColor(new_img, cv2.COLOR_RGB2GRAY)
-    new_corners = cv2.cornerHarris(gray_im_new, 2, 3, 0.04)
-
-    counts = {}
-    for descriptor in new_corners:
-        descriptor = descriptor.reshape(1, -1)
-        mn = descriptor.mean()
-        std = descriptor.std()
-        descriptor = (descriptor - mn) / std
-        distance, indice = knn.kneighbors(descriptor, n_neighbors=100)
-        for idx in indice[0]:
-            carpeta = str(int(corners[idx, 0]))
-            num_img = str(int(corners[idx, 1]))
-            id = (carpeta, num_img)
-            if id in counts:
-                counts[id] += 1
-            else:
-                counts[id] = 1
-    sorted_counts = sorted(counts.items(), key=lambda x: x[1], reverse=True)[:n_images.get()]
-    sorted_indexes = [idx[0] for idx in sorted_counts]
-    for index in sorted_indexes:
-        carpeta = index[0]
-        num_img = index[1]
-        res_images_path.append(images_path[(carpeta, num_img)])
-
-    return res_images_path
-
-
 def orb():
     res_images_path = []
 
@@ -218,9 +179,6 @@ def calcular_imagenes():
         res_images_path = color_histogram()
 
     elif seleccion_algoritmo.get() == 4:
-        res_images_path = harris()
-
-    elif seleccion_algoritmo.get() == 5:
         res_images_path = orb()
 
     for i in range(len(res_images_path)):
@@ -289,23 +247,21 @@ seleccion_algoritmo = IntVar()
 rad1 = Radiobutton(root, text='CNN', width=25, value=1, variable=seleccion_algoritmo)
 rad2 = Radiobutton(root, text='SIFT', width=25, value=2, variable=seleccion_algoritmo)
 rad3 = Radiobutton(root, text='COLOR HISTOGRAM', width=25, value=3, variable=seleccion_algoritmo)
-rad4 = Radiobutton(root, text='HARRIS', width=25, value=4, variable=seleccion_algoritmo)
-rad5 = Radiobutton(root, text='ORB', width=25, value=5, variable=seleccion_algoritmo)
+rad4 = Radiobutton(root, text='ORB', width=25, value=4, variable=seleccion_algoritmo)
 
 rad1.grid(column=0, row=5)
 rad2.grid(column=0, row=6)
 rad3.grid(column=0, row=7)
 rad4.grid(column=0, row=8)
-rad5.grid(column=0, row=9)
 
 lbl_info2 = Label(root, text="¿Cuántas imágenes quieres?", width=25)
-lbl_info2.grid(column=0, row=10, padx=5, pady=5)
+lbl_info2.grid(column=0, row=9, padx=5, pady=5)
 
 n_images = Scale(root, from_=1, to=12, orient=HORIZONTAL)
-n_images.grid(column=0, row=11, padx=5, pady=5)
+n_images.grid(column=0, row=10, padx=5, pady=5)
 
 btn_calcular_imagenes = Button(root, text="Calcular imagenes", width=25, command=calcular_imagenes)
-btn_calcular_imagenes.grid(column=0, row=12, padx=5, pady=5)
+btn_calcular_imagenes.grid(column=0, row=11, padx=5, pady=5)
 
 lbl_output_images = [Label(root), Label(root), Label(root), Label(root), Label(root), Label(root), Label(root),
                      Label(root), Label(root), Label(root), Label(root), Label(root)]
