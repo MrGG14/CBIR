@@ -25,10 +25,9 @@ def get_images_path(carpetas, n_imgs):
 
 
 def calculate_color_histogram(image, bins=8):
-    rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     histograms = []
     for i in range(3):
-        hist = cv2.calcHist([rgb_image], [i], None, [bins], [0, 256])
+        hist = cv2.calcHist([image], [i], None, [bins], [0, 256])
         histograms.append(hist)
     histogram = np.concatenate(histograms)
     histogram = cv2.normalize(histogram, None).flatten()
