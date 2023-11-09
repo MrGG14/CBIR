@@ -135,7 +135,7 @@ def harris():
     knn.fit(descriptors_train)
 
     new_img = query_image
-    gray_im_new = cv2.cvtColor(new_img, cv2.COLOR_BGR2GRAY)
+    gray_im_new = cv2.cvtColor(new_img, cv2.COLOR_RGB2GRAY)
     new_corners = cv2.cornerHarris(gray_im_new, 2, 3, 0.04)
 
     counts = {}
@@ -174,7 +174,7 @@ def orb():
     knn.fit(descriptors_train)
 
     new_img = query_image
-    gray_im_new = cv2.cvtColor(new_img, cv2.COLOR_BGR2GRAY)
+    gray_im_new = cv2.cvtColor(new_img, cv2.COLOR_RGB2GRAY)
     orb_model = cv2.ORB_create(nfeatures=1000, scaleFactor=1.2, nlevels=8, edgeThreshold=10)
     keypoints = orb_model.detect(gray_im_new, None)
     # Extrae los descriptores de los keypoints
