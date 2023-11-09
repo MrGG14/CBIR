@@ -25,10 +25,10 @@ def get_images_path(carpetas, n_imgs):
 
 
 def calculate_color_histogram(image, bins=8):
-    hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     histograms = []
     for i in range(3):
-        hist = cv2.calcHist([hsv_image], [i], None, [bins], [0, 256])
+        hist = cv2.calcHist([rgb_image], [i], None, [bins], [0, 256])
         histograms.append(hist)
     histogram = np.concatenate(histograms)
     histogram = cv2.normalize(histogram, None).flatten()
@@ -131,6 +131,10 @@ def texture_histogram():
 
 
 def calcular_imagenes():
+    # Borro las imagenes de las etiquetas en caso de que tengan
+    for label in lbl_output_images:
+        label.image = ""
+
     res_images_path = []
     if seleccion_algoritmo.get() == 1:
         res_images_path = cnn()
@@ -149,13 +153,9 @@ def calcular_imagenes():
         image = imutils.resize(image, width=180)
         im = Image.fromarray(image)
         img = ImageTk.PhotoImage(image=im)
-        lbl_output_image = Label(root)
-        if i < 6:
-            lbl_output_image.grid(column=i + 1, row=2)
-        else:
-            lbl_output_image.grid(column=i - 5, row=3)
-        lbl_output_image.configure(image=img)
-        lbl_output_image.image = img
+
+        lbl_output_images[i].configure(image=img)
+        lbl_output_images[i].image = img
 
     # Label IMAGEN DE SALIDA
     lbl_info3 = Label(root, text="IMAGENES DE SALIDA:", font="bold")
@@ -181,9 +181,7 @@ def elegir_imagen():
         # Label IMAGEN DE ENTRADA
         lbl_info1 = Label(root, text="IMAGEN DE ENTRADA:")
         lbl_info1.grid(column=0, row=1, padx=5, pady=5)
-        # Al momento que leemos la imagen de entrada, vaciamos
-        # la iamgen de salida y se limpia la selección de los
-        # radiobutton
+
         seleccion_algoritmo.set(0)
 
 
@@ -229,5 +227,14 @@ n_images.grid(column=0, row=10, padx=5, pady=5)
 
 btn_calcular_imagenes = Button(root, text="Calcular imagenes", width=25, command=calcular_imagenes)
 btn_calcular_imagenes.grid(column=0, row=11, padx=5, pady=5)
+
+lbl_output_images = [Label(root), Label(root), Label(root), Label(root), Label(root), Label(root), Label(root),
+                     Label(root), Label(root), Label(root), Label(root), Label(root)]
+
+for i in range(len(lbl_output_images)):
+    if i < 6:
+        lbl_output_images[i].grid(column=i + 1, row=2)
+    else:
+        lbl_output_images[i].grid(column=i - 5, row=3)
 
 root.mainloop()
