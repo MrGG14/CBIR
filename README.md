@@ -1,7 +1,7 @@
 
 # **CBIR**
 
-![](RackMultipart20231204-1-pmkxrh_html_386cb18d070217e3.png)
+![](https://www.baeldung.com/wp-content/uploads/sites/4/2022/09/CBIR-2.png)
 
 - Javier Gil Domínguez
 - Jorge Saénz de Miera Marzo
